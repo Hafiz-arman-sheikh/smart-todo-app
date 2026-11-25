@@ -1,3 +1,71 @@
+1. Authentication (Supabase Auth)
+- Sign Up: New user apna full name, email aur password enter karke account create kar sakta hai.
+- Login: Registered user email aur password ke through authenticate hota hai.
+- Logout: User apni active session terminate karke account se logout kar sakta hai.
+- Session Management: Supabase authenticated user ki session manage karta hai.
+- Protected Routes: Dashboard sirf authenticated users access kar sakte hain.
+2. Database (Supabase PostgreSQL)
+- Task Storage: User ke tasks PostgreSQL database mein permanently save hote hain.
+- User ID: Har task ke saath authenticated user ka unique user_id store hota hai.
+- CRUD Operations: User tasks Create, Read, Update aur Delete kar sakta hai.
+- Data Persistence: Page refresh ya dobara login karne par saved tasks database se load hote hain.
+3. Row Level Security (RLS)
+- User Data Isolation: Har user sirf apne tasks access kar sakta hai.
+- Authentication Verification: Supabase auth.uid() ke through current logged-in user ki identity verify karta hai.
+- SELECT Policy: User sirf apne tasks read kar sakta hai.
+- INSERT Policy: User apne user_id ke saath new task create kar sakta hai.
+- UPDATE Policy: User sirf apne tasks update kar sakta hai.
+- DELETE Policy: User sirf apne tasks delete kar sakta hai.
+- Data Security: Ek user doosre user ke private tasks access nahi kar sakta, provided all relevant RLS policies are correctly configured.
+4. Task Management
+- Add Task: New task title, description aur other details ke saath create hota hai.
+- Edit Task: Existing task ki information update kar sakte hain.
+- Delete Task: Unwanted task remove kar sakte hain.
+- Complete Task: Task status change karke Completed mark kar sakte hain.
+- Priority: Tasks ko different priority levels assign kar sakte hain.
+- Due Date & Time: Task ke liye deadline set kar sakte hain.
+5. Search & Filters
+- Search: Task title ke through specific task search kar sakte hain.
+- Status Filter: Pending aur Completed tasks separate dekh sakte hain.
+- Category Filter: Tasks ko categories ke according filter kar sakte hain.
+- Priority Filter: High, Medium aur Low priority tasks identify kar sakte hain.
+6. Calendar & Recurring Tasks
+- Calendar View: Tasks ko calendar ke through date-wise dekh sakte hain.
+- Due Date Tracking: Upcoming deadlines identify kar sakte hain.
+- Recurring Tasks: Daily ya configured recurring schedule ke according next task automatically generate hota hai.
+- Duplicate Prevention: next_occurrence_created field track karti hai ke recurring task ka next occurrence already create hua hai ya nahi.
+7. Analytics Dashboard
+- Total Tasks: Total created tasks display karta hai.
+- Completed Tasks: Successfully completed tasks ka count show karta hai.
+- Pending Tasks: Incomplete tasks track karta hai.
+- Completion Rate: Completed tasks aur total tasks ke ratio se progress percentage calculate hoti hai.
+- Charts: Task productivity aur progress ko visual form mein display karte hain.
+8. Browser Notifications
+- Notification Permission: Browser se notification permission request hoti hai.
+- Due Task Reminder: Due time par browser notification generate hoti hai.
+- Priority Information: Notification mein task title aur priority display hoti hai.
+- Duplicate Prevention: LocalStorage mein notification key save hoti hai, taake same task ki notification repeatedly na aaye.
+- Browser API: Notifications browser ke native Notification API se generate hoti hain.
+Note: Browser reminders ke liye app ka browser tab open rehna zaroori hai.
+9. Profile & Settings
+- Profile Information: User apna full name update kar sakta hai.
+- Password Update: Account password change kar sakta hai.
+- Dark / Light Mode: Interface theme switch kar sakta hai.
+- Notification Settings: Browser notification permission enable kar sakta hai.
+- Logout: Settings/profile menu se account sign out kar sakta hai.
+10. Frontend Technologies
+- React: Component-based user interface build karne ke liye.
+- TypeScript: Static typing aur development-time error checking ke liye.
+- Tailwind CSS: Responsive styling aur UI design ke liye.
+- React Router: Different pages aur protected navigation manage karne ke liye.
+- Lucide React: Icons display karne ke liye.
+- Recharts: Analytics charts create karne ke liye.
+- Framer Motion: UI animations ke liye.
+- React Hook Form & Zod: Form handling aur validation ke liye.
+- Sonner: Success aur error toast notifications ke liye.
+
+
+
 # Orbit — Smart To-Do Management
 
 A responsive, multi-user task manager built with React, TypeScript, Vite, Tailwind CSS, Supabase Auth/Postgres, and Recharts. The project intentionally uses straightforward React components and hooks so it is approachable for beginner-to-intermediate developers.
