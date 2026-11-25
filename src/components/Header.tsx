@@ -1,5 +1,12 @@
 
-import { Bell, ChevronDown, LogOut, Menu, Search, Settings } from 'lucide-react'
+import {
+  Bell,
+  ChevronDown,
+  LogOut,
+  Menu,
+  Search,
+  Settings,
+} from 'lucide-react'
 import { format } from 'date-fns'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -11,6 +18,8 @@ interface HeaderProps {
   onMenu: () => void
   onSearch: (value: string) => void
   onSettings: () => void
+  onNotifications: () => Promise<void>
+  notificationPermission: NotificationPermission | 'unsupported'
 }
 
 export default function Header({
@@ -18,6 +27,8 @@ export default function Header({
   onMenu,
   onSearch,
   onSettings,
+  onNotifications,
+  notificationPermission,
 }: HeaderProps) {
   const [profileOpen, setProfileOpen] = useState(false)
   const { signOut } = useAuth()
@@ -37,6 +48,36 @@ export default function Header({
 
     setProfileOpen(false)
     toast.success('You have been logged out.')
+  }
+
+  async function handleNotifications() {
+    if (notificationPermission === 'unsupported') {
+      toast.error('Your browser does not support notifications.')
+      return
+    }
+
+    if (notificationPermission === 'granted') {
+      toast.success('Task notifications are already enabled.')
+      onSettings()
+      return
+    }
+
+    if (notificationPermission === 'denied') {
+      toast.error(
+        'Notifications are blocked. Allow them in your browser site settings.',
+      )
+      return
+    }
+
+    await onNotifications()
+
+    if (typeof Notification !== 'undefined') {
+      if (Notification.permission === 'granted') {
+        toast.success('Notifications enabled successfully!')
+      } else if (Notification.permission === 'denied') {
+        toast.error('Notifications are blocked in browser settings.')
+      }
+    }
   }
 
   return (
@@ -66,7 +107,12 @@ export default function Header({
           <kbd>⌘ K</kbd>
         </label>
 
-        <button className="icon-button notification-button" title="Notifications">
+        <button
+          className="icon-button notification-button"
+          title="Notifications"
+          aria-label="Notifications"
+          onClick={handleNotifications}
+        >
           <Bell size={18} />
           <i />
         </button>

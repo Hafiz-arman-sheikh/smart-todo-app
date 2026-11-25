@@ -423,11 +423,13 @@ export default function Dashboard() {
 
       <main className="dashboard-main">
         <Header
-          user={user}
-          onMenu={() => setMenuOpen(true)}
-          onSearch={setSearch}
-          onSettings={() => setActiveView('Settings')}
-        />
+  user={user}
+  onMenu={() => setMenuOpen(true)}
+  onSearch={setSearch}
+  onSettings={() => setActiveView('Settings')}
+  onNotifications={enableNotifications}
+  notificationPermission={permission}
+/>
 
         <div className="dashboard-content">
           <div className="page-heading">

@@ -22,11 +22,15 @@ export function useTaskNotifications(tasks: Task[]) {
       setPermission(result)
     } catch (error) {
       console.error('Notification permission error:', error)
+      setPermission(Notification.permission)
     }
   }, [])
 
   useEffect(() => {
-    if (permission !== 'granted' || typeof Notification === 'undefined') {
+    if (
+      typeof Notification === 'undefined' ||
+      Notification.permission !== 'granted'
+    ) {
       return
     }
 
@@ -41,6 +45,17 @@ export function useTaskNotifications(tasks: Task[]) {
         const [hour, minute, second = 0] = task.due_time
           .split(':')
           .map(Number)
+
+        if (
+          !year ||
+          !month ||
+          !day ||
+          Number.isNaN(hour) ||
+          Number.isNaN(minute)
+        ) {
+          console.warn('Invalid task due date/time:', task.title)
+          return
+        }
 
         const dueDate = new Date(
           year,
@@ -57,28 +72,41 @@ export function useTaskNotifications(tasks: Task[]) {
 
         const timeDifference = now - dueTimestamp
 
-        // Allow notification for up to 30 minutes after due time.
-        if (timeDifference < 0 || timeDifference > 30 * 60 * 1000) return
+        // Notify at the due time or within 30 minutes afterwards.
+        if (timeDifference < 0 || timeDifference > 30 * 60 * 1000) {
+          return
+        }
 
+        // Version 2 avoids old keys saved by the previous implementation.
         const notificationKey = [
-          'orbit-notified',
+          'orbit-notified-v2',
           task.id,
           task.due_date,
           task.due_time,
         ].join('-')
 
-        if (localStorage.getItem(notificationKey)) return
+        try {
+          if (localStorage.getItem(notificationKey)) return
 
-        localStorage.setItem(notificationKey, 'true')
+          const notification = new Notification('Orbit Reminder 🔔', {
+            body: `${task.title} · Priority: ${task.priority}`,
+            tag: notificationKey,
+          })
 
-        const notification = new Notification('Orbit Reminder 🔔', {
-          body: `${task.title} · Priority: ${task.priority}`,
-          tag: notificationKey,
-        })
+          // Mark as notified only after creating the notification.
+          localStorage.setItem(notificationKey, 'true')
 
-        notification.onclick = () => {
-          window.focus()
-          notification.close()
+          notification.onclick = () => {
+            window.focus()
+            notification.close()
+          }
+
+          console.info('Orbit notification sent:', task.title)
+        } catch (error) {
+          console.error(
+            'Could not display Orbit notification:',
+            error,
+          )
         }
       })
     }
